@@ -4,7 +4,7 @@
 
 const ADMIN_CONFIG = {
   // >>> WAJIB DIISI: sama dengan API_URL di frontend/js/config.js <<<
-  API_URL: 'ISI_URL_WEB_APP_APPS_SCRIPT_DI_SINI',
+  API_URL: 'https://script.google.com/macros/s/AKfycbxwACgpD06q9Ce5U4W5FEdPM15R5vlqm8eq3iW4UsuAkHuOqIhHVh7i9M-KbXLdeMoq/exec',
   TOKEN_KEY: 'bpbd_admin_token',
   USER_KEY: 'bpbd_admin_user'
 };
