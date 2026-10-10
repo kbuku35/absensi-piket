@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin — Absensi Piket BPBD</title>
+  <link rel="stylesheet" href="css/admin.css" />
+</head>
+<body>
+
+<!-- ================= LOGIN ================= -->
+<div id="admin-login" class="login-page">
+  <div class="login-card">
+    <div class="logo">🚒</div>
+    <h1>Admin Absensi Piket</h1>
+    <p class="muted">BPBD — Siaga Karhutla &amp; Bencana</p>
+    <label>NIP Admin</label>
+    <input id="a-nip" type="text" placeholder="Masukkan NIP" />
+    <label>Password</label>
+    <input id="a-pass" type="password" placeholder="Masukkan password" />
+    <button id="a-login" class="btn btn-primary btn-block">Masuk</button>
+    <p id="a-msg" class="msg"></p>
+  </div>
+</div>
+
+<!-- ================= APP ================= -->
+<div id="admin-app" class="app hidden">
+  <aside class="sidebar">
+    <div class="brand">🚒 <span>Absensi Piket</span></div>
+    <nav>
+      <a data-tab="monitoring" class="nav-item active">📊 Monitoring</a>
+      <a data-tab="dashboard" class="nav-item">📈 Dashboard Pimpinan</a>
+      <a data-tab="jadwal" class="nav-item">📅 Jadwal Piket</a>
+      <a data-tab="regu" class="nav-item">👥 Regu</a>
+      <a data-tab="pegawai" class="nav-item">🧑💼 Pegawai</a>
+      <a data-tab="lokasi" class="nav-item">📍 Lokasi &amp; Radius</a>
+      <a data-tab="logbook" class="nav-item">📝 Log Book</a>
+      <a data-tab="laporan" class="nav-item">📄 Laporan Harian</a>
+      <a data-tab="rekap" class="nav-item">📊 Rekap Absensi</a>
+      <a data-tab="verifikasi" class="nav-item">✅ Verifikasi Absen</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div id="admin-user" class="muted small"></div>
+      <button id="a-logout" class="btn btn-outline btn-block">Keluar</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <h2 id="tab-title">Monitoring</h2>
+      <button id="btn-refresh" class="btn btn-outline">🔄 Muat Ulang</button>
+    </header>
+    <div id="content" class="content-area"></div>
+  </main>
+</div>
+
+<!-- ================= MODAL UMUM ================= -->
+<div id="modal" class="modal hidden">
+  <div class="modal-content">
+    <div class="modal-header">
+      <span id="modal-title">Form</span>
+      <button id="modal-close" class="btn-icon">✕</button>
+    </div>
+    <div id="modal-body" class="modal-body"></div>
+  </div>
+</div>
+
+<div id="toast" class="toast hidden"></div>
+
+<script src="js/admin-api.js"></script>
+<script src="js/admin.js"></script>
+</body>
+</html>
