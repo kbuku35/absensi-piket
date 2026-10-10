@@ -8,7 +8,7 @@
 
 const APP_CONFIG = {
   // Contoh: 'https://script.google.com/macros/s/AKfycb..../exec'
-  API_URL: 'ISI_URL_WEB_APP_APPS_SCRIPT_DI_SINI',
+  API_URL: 'https://script.google.com/macros/s/AKfycbxwACgpD06q9Ce5U4W5FEdPM15R5vlqm8eq3iW4UsuAkHuOqIhHVh7i9M-KbXLdeMoq/exec',
 
   // Nama aplikasi
   APP_NAME: 'Absensi Piket BPBD',
