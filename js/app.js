@@ -8,11 +8,9 @@ const State = {
   user: null,
   sesiAktif: null,
   jenisAbsen: null,       // 'masuk' | 'keluar'
-  qrToken: null,
   gps: null,              // { lat, lng, akurasi }
   fotoDataUrl: null,
   fakeGps: false,
-  qrScanner: null,
   stream: null
 };
 
@@ -45,7 +43,6 @@ function bindEvents() {
   document.getElementById('btn-absen-keluar').addEventListener('click', function () { mulaiAbsen('keluar'); });
 
   document.getElementById('modal-close').addEventListener('click', tutupModalAbsen);
-  document.getElementById('btn-manual-qr').addEventListener('click', inputManualQr);
   document.getElementById('btn-capture').addEventListener('click', ambilFoto);
   document.getElementById('btn-retake').addEventListener('click', ambilUlangFoto);
   document.getElementById('btn-lanjut-foto').addEventListener('click', lanjutKeKonfirmasi);
@@ -191,7 +188,6 @@ function renderSesi(d) {
 /* ============================ MULAI ABSEN ============================ */
 async function mulaiAbsen(jenis) {
   State.jenisAbsen = jenis;
-  State.qrToken = null;
   State.fotoDataUrl = null;
   State.gps = null;
 
@@ -202,61 +198,25 @@ async function mulaiAbsen(jenis) {
   // Ambil GPS lebih dulu (di latar)
   ambilGps();
 
-  // Tampilkan langkah QR
-  tampilStep('step-qr');
-  mulaiScanQr();
+  // Langsung ke langkah selfie (tanpa QR)
+  lanjutKeSelfie();
 }
 
 function tampilStep(id) {
-  ['step-qr', 'step-selfie', 'step-konfirmasi'].forEach(function (s) {
+  ['step-selfie', 'step-konfirmasi'].forEach(function (s) {
     document.getElementById(s).classList.add('hidden');
   });
   document.getElementById(id).classList.remove('hidden');
 }
 
-/* ── Langkah 1: QR ── */
-function mulaiScanQr() {
-  const reader = document.getElementById('qr-reader');
-  reader.innerHTML = '';
-  if (State.qrScanner) {
-    try { State.qrScanner.clear(); } catch (e) {}
-  }
-  State.qrScanner = new Html5Qrcode('qr-reader');
-  State.qrScanner.start(
-    { facingMode: 'environment' },
-    { fps: 10, qrbox: { width: 220, height: 220 } },
-    function (teks) {
-      // Berhasil scan
-      try { State.qrScanner.stop(); } catch (e) {}
-      prosesQr(teks);
-    },
-    function () { /* abaikan error per frame */ }
-  ).catch(function (err) {
-    reader.innerHTML = '<div class="empty">Kamera tidak dapat diakses: ' + err + '<br>Gunakan tombol "Input Token Manual".</div>';
-  });
-}
-
-function prosesQr(teks) {
-  State.qrToken = String(teks).trim();
-  toast('QR terbaca', 'ok');
-  lanjutKeSelfie();
-}
-
-function inputManualQr() {
-  const t = prompt('Masukkan token QR posko:');
-  if (t && t.trim()) {
-    try { if (State.qrScanner) State.qrScanner.stop(); } catch (e) {}
-    prosesQr(t);
-  }
-}
-
-/* ── Langkah 2: Selfie ── */
+/* ── Langkah 1: Selfie ── */
 function lanjutKeSelfie() {
   tampilStep('step-selfie');
   document.getElementById('foto-preview').classList.add('hidden');
   document.getElementById('video').classList.remove('hidden');
   document.getElementById('btn-capture').classList.remove('hidden');
   document.getElementById('btn-retake').classList.add('hidden');
+  document.getElementById('btn-lanjut-foto').classList.add('hidden');
   mulaiKamera();
 }
 
@@ -344,7 +304,6 @@ function lanjutKeKonfirmasi() {
     : '⚠️ Belum terdeteksi';
   document.getElementById('konfirmasi-info').innerHTML =
     '<div class="konf-row"><span>Jenis</span><b>Absen ' + State.jenisAbsen.toUpperCase() + '</b></div>' +
-    '<div class="konf-row"><span>QR</span><b>' + (State.qrToken ? '✅ Terbaca' : '❌ Belum') + '</b></div>' +
     '<div class="konf-row"><span>Lokasi</span><b>' + gpsTeks + '</b></div>' +
     '<div class="konf-row"><span>Selfie</span><b>' + (State.fotoDataUrl ? '✅ Siap' : '❌ Belum') + '</b></div>';
 }
@@ -364,7 +323,6 @@ async function kirimAbsen() {
     const res = await API.absen({
       token: State.token,
       jenis: State.jenisAbsen,
-      qrToken: State.qrToken,
       lat: State.gps.lat,
       lng: State.gps.lng,
       akurasi: State.gps.akurasi,
@@ -406,9 +364,5 @@ function tampilSukses(data, pesan) {
 function tutupModalAbsen() {
   document.getElementById('modal-absen').classList.add('hidden');
   hentikanKamera();
-  if (State.qrScanner) {
-    try { State.qrScanner.stop(); } catch (e) {}
-    State.qrScanner = null;
-  }
   document.getElementById('modal-msg').textContent = '';
 }
