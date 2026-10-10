@@ -4,7 +4,7 @@
    fallback ke cache saat offline. API tidak di-cache.
    ============================================================ */
 
-const CACHE_NAME = 'absen-piket-v1';
+const CACHE_NAME = 'absen-piket-v2';
 const ASET = [
   './',
   './index.html',
